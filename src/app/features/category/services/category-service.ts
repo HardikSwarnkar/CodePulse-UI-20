@@ -3,6 +3,7 @@ import { HttpClient, httpResource } from '@angular/common/http';
 import { Component, inject, InputSignal, signal } from '@angular/core';
 import { AddCategoryRequest, Category, UpdateCategoryRequest } from '../models/category.models';
 import { environment } from '../../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -38,9 +39,7 @@ export class CategoryService {
     this.updateCategoryStatus.set('loading');
 
     this.http
-      .put<void>(`${this.apiBaseUrl}/api/Categories/${id}`, updateCategoryRequestDto, {
-        withCredentials: true,
-      })
+      .put<void>(`${this.apiBaseUrl}/api/Categories/${id}`, updateCategoryRequestDto)
       .subscribe({
         next: () => {
           this.updateCategoryStatus.set('success');
@@ -49,5 +48,9 @@ export class CategoryService {
           this.updateCategoryStatus.set('error');
         },
       });
+  }
+
+  deleteCategory(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiBaseUrl}/api/Categories/${id}`);
   }
 }
